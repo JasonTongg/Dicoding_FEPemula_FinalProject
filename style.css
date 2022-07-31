@@ -1,0 +1,134 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+:root{
+    --dark: #2C3639;
+    --light: #DCD7C9;
+    --primary: #262859;
+    --lightPrimary: #3E417B;
+    --secondary: #A27B5C;
+}
+
+body{
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+.nav{
+    background-color: var(--lightPrimary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    position: relative;
+}
+
+.nav h2{
+    color: var(--light);
+}
+
+.nav .searchBar{
+    width: 50vw;
+    display: grid;
+    grid-template-columns: 90% 10%;
+    gap: 1rem;
+}
+
+.nav .searchBar input{
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    color: var(--dark);
+    padding: .5rem 1rem;
+}
+
+.nav button{
+    border: none;
+    outline: none;
+    color: var(--dark);
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.nav .addBook{
+    padding: .5rem 1rem;
+}
+
+.nav .fixedAddBook{
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: calc(100% + 15px);
+    right: 15px;
+    border: 5px solid var(--lightPrimary);
+    border-radius: 50%;
+    font-size: 2rem;
+    color: var(--lightPrimary);
+    cursor: pointer;
+    /* display: none; */
+}
+
+main{
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    gap: 2rem;
+    padding: 2rem;
+    align-content: center;
+    justify-content: center;
+}
+
+main > *{
+    width: 500px;
+    min-height: 270px;
+    background-color: red;
+}
+
+footer{
+    padding: 1rem 2rem;
+    text-align: center;
+    background-color: var(--lightPrimary);
+    color: white;
+}
+
+@media only screen and (max-width: 1000px){
+    .nav .searchBar{
+        width: 55vw;
+    }
+
+    .nav .searchBar{
+        grid-template-columns: 80% 20%;
+    }
+}
+
+@media only screen and (max-width: 900px){
+    .nav .addBook{
+        display: none;
+    }
+
+    .nav .fixedAddBook{
+        display: block;
+    }
+}
+
+@media only screen and (max-width: 600px){
+    .nav h2{
+        font-size: 1.3rem;
+        text-align: center;
+    }
+}
+
+@media only screen and (max-width: 600px){
+    .nav .searchBar button{
+        display: none;
+    }
+
+    .nav .searchBar{
+        grid-template-columns: 100%;
+    }
+}
