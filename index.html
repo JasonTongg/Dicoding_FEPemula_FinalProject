@@ -12,17 +12,66 @@
     <header>
       <nav class="nav">
         <h2>Bookshelf App</h2>
-        <div class="searchBar">
+        <form class="searchBar">
           <input type="text" placeholder="Search Book..." />
           <button>Search</button>
-        </div>
+        </form>
         <button class="addBook">Add Book</button>
         <button class="fixedAddBook">+</button>
       </nav>
     </header>
     <main>
-      <section class="unread"></section>
-      <section class="read"></section>
+      <section class="unread">
+        <h2>Belum selesai dibaca</h2>
+        <div class="listItem">
+          <div class="item">
+            <h3 style="color: white">Tidak ada buku</h3>
+          </div>
+        </div>
+      </section>
+      <section class="read">
+        <h2>Sudah selesai dibaca</h2>
+        <div class="listItem">
+          <div class="item">
+            <h3 style="color: white">Tidak ada buku</h3>
+          </div>
+        </div>
+      </section>
+      <section class="overlay">
+        <form class="form">
+          <h2>Masukkan Buku Baru</h2>
+          <div class="formItem">
+            <label for="judul">Judul</label>
+            <input type="text" id="judul" required />
+          </div>
+          <div class="formItem">
+            <label for="penulis">Penulis</label>
+            <input type="text" id="penulis" required />
+          </div>
+          <div class="formItem">
+            <label for="tahun">Tahun</label>
+            <input type="text" id="tahun" required />
+          </div>
+          <div class="formItem">
+            <input type="checkbox" id="radio" />
+            <label for="radio">Selesai dibaca</label>
+          </div>
+          <button class="submit">Masukkan kedalam rak buku</button>
+        </form>
+      </section>
+      <section class="confirm">
+        <div class="confirmContent">
+          <h2>Konfirmasi Hapus Buku</h2>
+          <p>
+            Silakan diklik konfirmasi jika ingin menghapus buku. Jika tidak
+            silakan klik batal.
+          </p>
+          <div class="buttons">
+            <button class="konfirmasi">Konfirmasi</button>
+            <button class="batal">Batal</button>
+          </div>
+        </div>
+      </section>
     </main>
     <footer>
       <p>&copy;Copyright 2022, Make with &hearts; by <strong>Jason</strong></p>
