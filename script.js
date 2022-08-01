@@ -14,9 +14,44 @@ let searchBarInput = document.querySelector(".nav .searchBar input");
 let searchBar = document.querySelector(".nav .searchBar");
 
 let deleteId = 0;
+let count =0;
 let deleteParent;
-let listItem = [];
-let readItem = [];
+let listItem = JSON.parse(localStorage.getItem("listItem")) ? JSON.parse(localStorage.getItem("listItem")) : [];
+let readItem = JSON.parse(localStorage.getItem("readItem")) ? JSON.parse(localStorage.getItem("readItem")) : [];
+
+let renderAllItem = (list = listItem, read = readItem) => {
+    renderBook(list);
+    renderReadBook(read);
+    reInit();
+    renderAllItemButton();
+}
+
+let filterList = () => {
+    readItem = readItem.filter(item => item!==undefined);
+    listItem = listItem.filter(item => item!==undefined);
+    localStorage.setItem("listItem", JSON.stringify(listItem));
+    localStorage.setItem("readItem", JSON.stringify(readItem));
+}
+
+let renderAllItemButton = () => {
+    renderReadedBook();
+    renderDeleteBook();
+}
+
+let reInit = () => {
+    deleteBook = document.querySelectorAll("main .unread .listItem .item .deleteButton");
+    konfirmasi = document.querySelector(".konfirmasi");
+    batal = document.querySelector(".batal");
+    selesaiBaca = document.querySelectorAll("main .unread .listItem .item .selesaiBaca");
+    deleteBook = [...deleteBook, ...document.querySelectorAll("main .read .listItem .item .deleteButton")]
+    belumSelesaiBaca = document.querySelectorAll("main .read .listItem .item .belumSelesaiBaca");
+}
+
+let clearAddForm = () => {
+    document.querySelector(".overlay .form #judul").value = '';
+    document.querySelector(".overlay .form #penulis").value = '';
+    document.querySelector(".overlay .form #tahun").value = '';
+}
 
 let renderDeleteBook = () => {
     deleteBook.forEach(item => {
@@ -29,35 +64,30 @@ let renderDeleteBook = () => {
 }
 
 let renderReadedBook = () => {
+    let index;
     belumSelesaiBaca.forEach(item => {
         item.addEventListener("click", (e) => {
-            let index = +e.target.closest(".item").getAttribute("id");
+            index = +e.target.closest(".item").getAttribute("id");
             listItem.push(readItem[index]);
             readItem.splice(index,1);
-            readItem = readItem.filter(item => item!==undefined)
-            listItem = listItem.filter(item => item!==undefined)
-            renderBook(listItem);
-            renderReadBook(readItem);
+            filterList();
+            renderAllItem(listItem,readItem);
         })
     })
     selesaiBaca.forEach(item => {
         item.addEventListener("click", (e) => {
-            let index = +e.target.closest(".item").getAttribute("id");
+            index = +e.target.closest(".item").getAttribute("id");
             readItem.push(listItem[index]);
             listItem.splice(index,1);
-            readItem = readItem.filter(item => item!==undefined)
-            listItem = listItem.filter(item => item!==undefined)
-            renderBook(listItem);
-            renderReadBook(readItem);
+            filterList();
+            renderAllItem(listItem,readItem);
         })
     })
 }
 
 let renderBook = (list) => {
     unRead.innerHTML = '';
-    document.querySelector(".overlay .form #judul").value = '';
-    document.querySelector(".overlay .form #penulis").value = '';
-    document.querySelector(".overlay .form #tahun").value = '';
+    clearAddForm();
     let markup = ``;
     list?.forEach((item, idx) => {
         markup = `
@@ -75,21 +105,11 @@ let renderBook = (list) => {
         `;
         unRead.insertAdjacentHTML("beforeend", markup);
     })
-    deleteBook = document.querySelectorAll("main .unread .listItem .item .deleteButton");
-    konfirmasi = document.querySelector(".konfirmasi");
-    batal = document.querySelector(".batal");
-    selesaiBaca = document.querySelectorAll("main .unread .listItem .item .selesaiBaca");
-    Array.from(deleteBook).push(document.querySelectorAll("main .read .listItem .item .deleteButton"));
-    belumSelesaiBaca = document.querySelectorAll("main .read .listItem .item .belumSelesaiBaca");
-    renderDeleteBook();
-    renderReadedBook();
 }
 
 let renderReadBook = (list) => {
     read.innerHTML = '';
-    document.querySelector(".overlay .form #judul").value = '';
-    document.querySelector(".overlay .form #penulis").value = '';
-    document.querySelector(".overlay .form #tahun").value = '';
+    clearAddForm();
     let markup = ``;
     list?.forEach((item, idx) => {
         markup = `
@@ -107,14 +127,6 @@ let renderReadBook = (list) => {
         `;
         read.insertAdjacentHTML("beforeend", markup);
     })
-    deleteBook = document.querySelectorAll("main .unread .listItem .item .deleteButton");
-    konfirmasi = document.querySelector(".konfirmasi");
-    batal = document.querySelector(".batal");
-    selesaiBaca = document.querySelectorAll("main .unread .listItem .item .selesaiBaca");
-    deleteBook = [...deleteBook, ...Array.from(document.querySelectorAll("main .read .listItem .item .deleteButton"))];
-    belumSelesaiBaca = document.querySelectorAll("main .read .listItem .item .belumSelesaiBaca");
-    renderDeleteBook();
-    renderReadedBook();
 }
 
 [confirmForm, batal, konfirmasi].forEach(item => {
@@ -129,11 +141,15 @@ konfirmasi.addEventListener("click", () => {
     if(deleteParent.classList.contains("read")){
         readItem.splice(deleteId,1);
         renderReadBook(readItem);
+        localStorage.setItem("readItem", JSON.stringify(readItem));
     }
     else{
         listItem.splice(deleteId,1);
         renderBook(listItem);
+        localStorage.setItem("listItem", JSON.stringify(listItem));
     }
+    reInit();
+    renderAllItemButton();
 })
 
 addButton.forEach(item => {
@@ -159,12 +175,16 @@ addFormItem.addEventListener("submit", (e) => {
     if(document.querySelector(".overlay .form #radio").checked){
         readItem.push(newBook);
         renderReadBook(readItem);
+        localStorage.setItem("readItem", JSON.stringify(readItem));
     }
     else{
         listItem.push(newBook);
         renderBook(listItem);
+        localStorage.setItem("listItem", JSON.stringify(listItem));
     }
     
+    reInit();
+    renderAllItemButton();
     addForm.classList.remove("muncul");
 })
 
@@ -175,4 +195,11 @@ searchBar.addEventListener("submit", (e) => {
 searchBarInput.addEventListener("change", () => {
     renderBook(listItem.filter(item => item.judul.includes(searchBarInput.value)));
     renderReadBook(readItem.filter(item => item.judul.includes(searchBarInput.value)));
+    reInit();
+    renderAllItemButton();
 })
+
+let init = () => {
+    renderAllItem();
+}
+init();
